@@ -12,15 +12,15 @@ end
 #les crypto qui ont la plus grosse valeur
 def valeur_max
 	crypto = Hash[@devise.zip(@prix)]
-	x = crypto.key(crypto.values.max)
-	puts "#{x}"
+	val_max = crypto.key(crypto.values.max)
+	puts "les crypto qui ont la plus grosse valeur est: #{val_max}"
 end
 
 #les crypto qui ont la plus petite valeur.
 def valeur_min
 	crypto = Hash[@devise.zip(@prix)]
-	x = crypto.key(crypto.values.min)
-	puts "#{x}"
+	val_min = crypto.key(crypto.values.min)
+	puts "les crypto qui ont la plus petite valeur est: #{val_min}"
 end
 
 #Le nombre de crypto contenant le mot "coin"
@@ -32,13 +32,69 @@ end
 
 #Les devises, dont le cours est inférieur à 6000
 def dev_inf
+	_devise =  Array.new #_dev = [] #@new_devise 
+    _prix = Array.new #_prix = [] #@new_price
+    price = Array.new #price = [] #@clean_price
+	@prix.each {|value| price << (value.delete ('$'))}
+	_crypto = Hash[@devise.zip(price)]
 
+	_crypto.each do |key, value| 
+		if value.to_i < 6000
+			_prix << value
+			_devise << key
+		end
+	end
+
+	_crypto = Hash[_devise.zip(_prix)]
+	puts "Les devises ayant un cours inferieurs a 6000 sont: \n #{_devise}"
 end
 
 #La devise la plus chère parmi celles dont le cours est inférieur à 6000.
-
 def dev_chere
+	_devise =  Array.new
+    _prix = Array.new
+    price = Array.new
+		@prix.each {|value| price << (value.delete ('$'))}
+		_crypto = Hash[_devise.zip(price)]
 
+		_crypto.each do |key, value| 
+			if value.to_i < 6000
+				_prix << value
+				_devise << key
+			end
+		end
+		_crypto = Hash[_devise.zip(@new_price)]
+    	puts "La devise la plus chère parmi celles dont le cours est inférieur à 6000 est '#{_crypto.key(_crypto.values.max)}'"
 end
 
-contenir_coin
+def menu
+	puts "Entrer votre choix?"
+	puts "0.Fusion de deux tableaux"
+	puts "1.les crypto qui ont la plus grosse valeur" 
+	puts "2.les crypto qui ont la plus petite valeur"
+	puts "3.Le nombre de crypto contenant le mot 'coin'"
+	puts "4.Les devises, dont le cours est inférieur à 6000"
+	puts "5.La devise la plus chère parmi celles dont le cours est inférieur à 6000." 
+
+	print ">> "
+
+	choix = gets.chomp.to_i
+
+	if choix ==  0
+		association
+	elsif choix == 1
+		valeur_max
+	elsif choix == 2
+		valeur_min
+	elsif choix == 3
+		contenir_coin
+	elsif choix == 4
+		dev_inf
+	elsif choix == 5
+		dev_chere
+	else  puts "Erreur, veuillez choisir un chiffre correcte!"
+	end
+end
+
+menu #permet a vos utilisateur de choisir ce qu'ils veulent savoir
+
